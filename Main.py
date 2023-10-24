@@ -1,7 +1,5 @@
 # tic tac toe game using classes
 import os
-import re
-from weakref import ref
 
 os.system("clear")
 
