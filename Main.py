@@ -38,8 +38,7 @@ class Board:
                 and self.cells[condition[2]] == player
             ):
                 return True
-            else:
-                return False
+        return False
 
     def is_tie(self):
         """checks if game is a tie"""
@@ -90,6 +89,7 @@ while True:
         refresh_screen()
     # update board on valid input
     board.update_cell(x_choice, "X")
+    refresh_screen()
 
     # check for X win
     if board.is_winner("X"):
@@ -100,6 +100,7 @@ while True:
             board.reset()
             continue
         else:
+            print("Game ended")
             break
     # check for tie
     if board.is_tie():
@@ -110,6 +111,7 @@ while True:
             board.reset()
             continue
         else:
+            print("Game ended")
             break
 
     # 0 turn
@@ -129,6 +131,7 @@ while True:
         refresh_screen()
     # update board on valid input
     board.update_cell(o_choice, "O")
+    refresh_screen()
 
     # check for O win
     if board.is_winner("O"):
@@ -153,5 +156,3 @@ while True:
 
 # BUG LIST
 # 1. if player inputs a letter, it crashes
-# 2. does not pickup winner until next turn
-# many issues here
