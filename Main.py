@@ -1,6 +1,7 @@
 # tic tac toe game using classes
 from curses.ascii import isdigit
 import os
+from random import randint
 
 os.system("clear")
 
@@ -9,6 +10,18 @@ class Board:
     def __init__(self):
         # init spaces for board
         self.cells = [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "]
+        self.corners = [1, 3, 7, 9]
+        self.edges = [2, 4, 6, 8]
+        self.win_conditions = (
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9],
+            [1, 4, 7],
+            [2, 5, 8],
+            [3, 6, 9],
+            [1, 5, 9],
+            [3, 5, 7],
+        )
 
     def display(self):
         print(f" {self.cells[1]} | {self.cells[2]} | {self.cells[3]} ")
@@ -22,17 +35,8 @@ class Board:
 
     def is_winner(self, player):
         """checks if player has won"""
-        win_conditions = (
-            [1, 2, 3],
-            [4, 5, 6],
-            [7, 8, 9],
-            [1, 4, 7],
-            [2, 5, 8],
-            [3, 6, 9],
-            [1, 5, 9],
-            [3, 5, 7],
-        )
-        for condition in win_conditions:
+
+        for condition in self.win_conditions:
             if (
                 self.cells[condition[0]] == player
                 and self.cells[condition[1]] == player
@@ -53,6 +57,45 @@ class Board:
 
     def reset(self):
         self.cells = [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "]
+
+    def AI(self, player):
+        # check if enemy is X or O
+        if player == "X":
+            enemy = "O"
+        else:
+            enemy = "X"
+
+        # if center is empty, take it
+        if self.cells[5] == " ":
+            self.update_cell(5, player)
+        else:
+            # check if enemy is about to win and block them
+            for i, j, k in self.win_conditions:
+                if self.cells[i] == self.cells[j] == enemy and self.cells[k] == " ":
+                    self.update_cell(k, player)
+                    return
+
+                elif self.cells[i] == self.cells[k] == enemy and self.cells[j] == " ":
+                    self.update_cell(j, player)
+                    return
+
+                elif self.cells[j] == self.cells[k] == enemy and self.cells[i] == " ":
+                    self.update_cell(i, player)
+                    return
+
+            # check if any of the corners are available
+            if any(self.cells[i] == " " for i in self.corners):
+                # at least one corner is available, take a corner
+                for i in self.corners:
+                    if self.cells[i] == " ":
+                        self.update_cell(i, player)
+                        return
+            else:
+                # no corners are available, take an edge
+                for i in self.edges:
+                    if self.cells[i] == " ":
+                        self.update_cell(i, player)
+                        return
 
 
 board = Board()
@@ -120,7 +163,9 @@ while True:
             break
 
     # 0 turn
-    player_move("O")
+    # player_move("O")
+    board.AI("O")
+    refresh_screen()
 
     # check for X win
     if board.is_winner("O"):
