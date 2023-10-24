@@ -78,7 +78,7 @@ def player_move(player):
     choice = input(f"\n{player}) Please choose 1-9. > ")
     # check if input is valid
     # check if input is a number between 1-9
-    while int(choice) not in range(1, 10) or isdigit(choice) == False:
+    while isdigit(choice) == False or int(choice) not in range(1, 10):
         print("\nSorry, that is not a valid choice.\n")
         choice = input(f"\n{player}) Please choose 1-9. > ")
         refresh_screen()
@@ -144,6 +144,3 @@ while True:
         else:
             print("Game ended")
             break
-
-# BUG LIST
-# 1. if player inputs a letter, it crashes
