@@ -1,4 +1,5 @@
 # tic tac toe game using classes
+from curses.ascii import isdigit
 import os
 
 os.system("clear")
@@ -17,7 +18,7 @@ class Board:
         print(f" {self.cells[7]} | {self.cells[8]} | {self.cells[9]} ")
 
     def update_cell(self, cell_num, player):
-        self.cells[cell_num] = player
+        self.cells[int(cell_num)] = player
 
     def is_winner(self, player):
         """checks if player has won"""
@@ -70,26 +71,30 @@ def refresh_screen():
     board.display()
 
 
-while True:
-    # x turn
+def player_move(player):
     refresh_screen()
 
     # get X input and update board
-    x_choice = int(input("\nX) Please choose 1-9. > "))
+    choice = input(f"\n{player}) Please choose 1-9. > ")
     # check if input is valid
     # check if input is a number between 1-9
-    while x_choice not in range(1, 10):
+    while int(choice) not in range(1, 10) or isdigit(choice) == False:
         print("\nSorry, that is not a valid choice.\n")
-        x_choice = int(input("\nX) Please choose 1-9. > "))
+        choice = input(f"\n{player}) Please choose 1-9. > ")
         refresh_screen()
     # check if cell is empty
-    while board.cells[x_choice] != " ":
+    while board.cells[int(choice)] != " ":
         print("\nSorry, that cell is taken.\n")
-        x_choice = int(input("\nX) Please choose 1-9. > "))
+        choice = int(input(f"\n{player}) Please choose 1-9. > "))
         refresh_screen()
     # update board on valid input
-    board.update_cell(x_choice, "X")
+    board.update_cell(choice, str(player))
     refresh_screen()
+
+
+while True:
+    # x turn
+    player_move("X")
 
     # check for X win
     if board.is_winner("X"):
@@ -115,36 +120,21 @@ while True:
             break
 
     # 0 turn
-    refresh_screen()
-    # get O input and update board
-    o_choice = int(input("\nO) Please choose 1-9. > "))
-    # check if input is valid
-    # check if input is a number between 1-9
-    while o_choice not in range(1, 10):
-        print("\nSorry, that is not a valid choice.\n")
-        o_choice = int(input("\nO) Please choose 1-9. > "))
-        refresh_screen()
-    # check if cell is empty
-    while board.cells[o_choice] != " ":
-        print("\nSorry, that cell is taken.\n")
-        o_choice = int(input("\nO) Please choose 1-9. > "))
-        refresh_screen()
-    # update board on valid input
-    board.update_cell(o_choice, "O")
-    refresh_screen()
+    player_move("O")
 
-    # check for O win
+    # check for X win
     if board.is_winner("O"):
-        # if player O wins, break loop
-        print(f"\nO wins!\n")
+        # if player X wins, break loop
+        print(f"\nX\O wins!\n")
         play_again = input("Play again? (Y/N) > ").upper()
         if play_again == "Y":
             board.reset()
             continue
         else:
+            print("Game ended")
             break
     # check for tie
-    elif board.is_tie():
+    if board.is_tie():
         # if it is a tie, tell the player and ask if they want to play again
         print(f"\nTie!\n")
         play_again = input("Play again? (Y/N) > ").upper()
@@ -152,6 +142,7 @@ while True:
             board.reset()
             continue
         else:
+            print("Game ended")
             break
 
 # BUG LIST
