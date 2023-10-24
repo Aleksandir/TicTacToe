@@ -170,7 +170,7 @@ while True:
     # check for X win
     if board.is_winner("O"):
         # if player X wins, break loop
-        print(f"\nX\O wins!\n")
+        print(f"\nO wins!\n")
         play_again = input("Play again? (Y/N) > ").upper()
         if play_again == "Y":
             board.reset()
