@@ -52,7 +52,7 @@ class Board:
         print("-----------")
         print(f" {self.cells[7]} | {self.cells[8]} | {self.cells[9]} ")
 
-    def update_cell(self, cell_num: int, player: str):
+    def update_cell(self, cell_num, player: str):
         """Updates the specified cell with the player's mark.
 
         Args:
