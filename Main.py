@@ -7,8 +7,29 @@ os.system("clear")
 
 
 class Board:
+    """Represents a Tic Tac Toe board.
+
+    Attributes:
+        cells (list): A list of 10 strings representing the cells of the board.
+            The first element is ignored, so the cells are numbered from 1 to 9.
+            An empty cell is represented by a space character.
+        corners (list): A list of 4 integers representing the indices of the corner cells.
+        edges (list): A list of 4 integers representing the indices of the edge cells.
+        win_conditions (tuple): A tuple of 8 tuples representing the winning conditions
+            in the game. Each inner tuple contains the indices of the cells that need
+            to be filled with the same mark in order to win the game.
+
+    Methods:
+        display(): Displays the current state of the board.
+        update_cell(cell_num, player): Updates the specified cell with the player's mark.
+        is_winner(player): Checks if the specified player has won the game.
+        is_tie(): Checks if the game is a tie.
+        reset(): Resets the board to its initial state.
+        AI(player): Implements a simple AI to play the game.
+    """
+
     def __init__(self):
-        # init spaces for board
+        """Initializes a new instance of the Board class."""
         self.cells = [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "]
         self.corners = [1, 3, 7, 9]
         self.edges = [2, 4, 6, 8]
@@ -24,6 +45,7 @@ class Board:
         )
 
     def display(self):
+        """Displays the current state of the board."""
         print(f" {self.cells[1]} | {self.cells[2]} | {self.cells[3]} ")
         print("-----------")
         print(f" {self.cells[4]} | {self.cells[5]} | {self.cells[6]} ")
@@ -31,11 +53,23 @@ class Board:
         print(f" {self.cells[7]} | {self.cells[8]} | {self.cells[9]} ")
 
     def update_cell(self, cell_num, player):
+        """Updates the specified cell with the player's mark.
+
+        Args:
+            cell_num (int): The index of the cell to update (1-9).
+            player (str): The mark to place in the cell ("X" or "O").
+        """
         self.cells[int(cell_num)] = player
 
     def is_winner(self, player):
-        """checks if player has won"""
+        """Checks if the specified player has won the game.
 
+        Args:
+            player (str): The mark to check for ("X" or "O").
+
+        Returns:
+            bool: True if the player has won, False otherwise.
+        """
         for condition in self.win_conditions:
             if (
                 self.cells[condition[0]] == player
@@ -46,52 +80,51 @@ class Board:
         return False
 
     def is_tie(self):
-        """checks if game is a tie"""
-        # Check if all the cells in the board are filled
-        # by iterating over the cells and checking if they
-        # are not equal to " ".
+        """Checks if the game is a tie.
+
+        Returns:
+            bool: True if the game is a tie, False otherwise.
+        """
         if all(cell != " " for cell in self.cells[1:9]):
             return True
         else:
             return False
 
     def reset(self):
+        """Resets the board to its initial state."""
         self.cells = [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "]
 
     def AI(self, player):
-        # check if enemy is X or O
+        """Implements a simple AI to play the game.
+
+        Args:
+            player (str): The mark to use for the AI ("X" or "O").
+        """
         if player == "X":
             enemy = "O"
         else:
             enemy = "X"
 
-        # if center is empty, take it
         if self.cells[5] == " ":
             self.update_cell(5, player)
         else:
-            # check if enemy is about to win and block them
             for i, j, k in self.win_conditions:
                 if self.cells[i] == self.cells[j] == enemy and self.cells[k] == " ":
                     self.update_cell(k, player)
                     return
-
                 elif self.cells[i] == self.cells[k] == enemy and self.cells[j] == " ":
                     self.update_cell(j, player)
                     return
-
                 elif self.cells[j] == self.cells[k] == enemy and self.cells[i] == " ":
                     self.update_cell(i, player)
                     return
 
-            # check if any of the corners are available
             if any(self.cells[i] == " " for i in self.corners):
-                # at least one corner is available, take a corner
                 for i in self.corners:
                     if self.cells[i] == " ":
                         self.update_cell(i, player)
                         return
             else:
-                # no corners are available, take an edge
                 for i in self.edges:
                     if self.cells[i] == " ":
                         self.update_cell(i, player)
