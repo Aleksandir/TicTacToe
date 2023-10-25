@@ -52,7 +52,7 @@ class Board:
         print("-----------")
         print(f" {self.cells[7]} | {self.cells[8]} | {self.cells[9]} ")
 
-    def update_cell(self, cell_num, player):
+    def update_cell(self, cell_num: int, player: str):
         """Updates the specified cell with the player's mark.
 
         Args:
@@ -61,7 +61,7 @@ class Board:
         """
         self.cells[int(cell_num)] = player
 
-    def is_winner(self, player):
+    def is_winner(self, player: str) -> bool:
         """Checks if the specified player has won the game.
 
         Args:
@@ -79,7 +79,7 @@ class Board:
                 return True
         return False
 
-    def is_tie(self):
+    def is_tie(self) -> bool:
         """Checks if the game is a tie.
 
         Returns:
@@ -94,7 +94,7 @@ class Board:
         """Resets the board to its initial state."""
         self.cells = [" ", " ", " ", " ", " ", " ", " ", " ", " ", " "]
 
-    def AI(self, player):
+    def AI(self, player: str):
         """Implements a simple AI to play the game.
 
         Args:
@@ -105,7 +105,17 @@ class Board:
         else:
             enemy = "X"
 
-        if self.cells[5] == " ":
+        # AI Behaviour:
+        # 1. if die roll is 1, choose random cell
+        # 2 if center is empty, choose center
+        # 3. if enemy has 2 in a row, block
+        # 4. if AI has 2 in a row, win
+        # 5. if corner is empty, choose corner
+        # 6. else choose random edge
+        ai_mistake_chance = randint(1, 5)
+        if ai_mistake_chance == 1:
+            self.update_cell(randint(1, 9), player)
+        elif self.cells[5] == " ":
             self.update_cell(5, player)
         else:
             for i, j, k in self.win_conditions:
@@ -147,7 +157,7 @@ def refresh_screen():
     board.display()
 
 
-def player_move(player):
+def player_move(player: str):
     refresh_screen()
 
     # get X input and update board
